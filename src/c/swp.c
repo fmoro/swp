@@ -63,11 +63,11 @@ static void prv_click_config_provider(void *context) {
   window_single_click_subscribe(BUTTON_ID_DOWN, prv_down_click_handler);
 }
 
-static void click_config_provider(void *context) {
+/*static void click_config_provider(void *context) {
   window_single_click_subscribe(BUTTON_ID_SELECT, prv_select_click_handler);
   window_single_click_subscribe(BUTTON_ID_UP, prv_up_click_handler);
   window_single_click_subscribe(BUTTON_ID_DOWN, prv_down_click_handler);
-}
+}*/
 
 static void set_status_bar(Layer *layer) {
   // Create the StatusBarLayer
@@ -80,7 +80,7 @@ static void set_status_bar(Layer *layer) {
   layer_add_child(layer, status_bar_layer_get_layer(s_status_bar));
 }
 
-static void set_action_bar_layer(Window *window) {
+/*static void set_action_bar_layer(Window *window) {
   // Load icon bitmaps
   s_up_bitmap = gbitmap_create_with_resource(RESOURCE_ID_UP_ICON);
   s_down_bitmap = gbitmap_create_with_resource(RESOURCE_ID_DOWN_ICON);
@@ -97,14 +97,14 @@ static void set_action_bar_layer(Window *window) {
 
   // Add to Window
   action_bar_layer_add_to_window(s_action_bar, window);
-}
+}*/
 
 static void prv_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
 
   set_status_bar(window_layer);
 
-  set_action_bar_layer(window);
+  //set_action_bar_layer(window);
 
   GRect bounds = layer_get_bounds(window_layer);
 

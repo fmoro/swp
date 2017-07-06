@@ -42,15 +42,10 @@ static void send_deinit_message() {
 static void accel_data_handler(AccelData *data, uint32_t num_samples) {
   uint32_t i;
 	for (i=0; i < num_samples; i++) {
-		if (!data[i].did_vibrate) {
-			int16_t data_to_log[3];
-			data_to_log[0] = data[i].x;
-			data_to_log[1] = data[i].y;
-			data_to_log[2] = data[i].z;
-			if (data_logging_log(s_session_ref, &data_to_log, 3) != DATA_LOGGING_SUCCESS) {
-				APP_LOG(APP_LOG_LEVEL_DEBUG, "DATA LOGGING ERROR.");
-			}
-		}
+    //uint8_t *data_to_log = (uint8_t *) &data[i];
+    if (data_logging_log(s_session_ref, (uint8_t *) &data[i], 1) != DATA_LOGGING_SUCCESS) {
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "DATA LOGGING ERROR.");
+    }
 	}
 }
 
@@ -60,7 +55,8 @@ static void prv_init() {
   send_init_message();
 
   // Data logging
-	s_session_ref = data_logging_create(LOGGING_TAG, DATA_LOGGING_INT, sizeof(int16_t), true);
+  // s_session_ref = data_logging_create(LOGGING_TAG, DATA_LOGGING_INT, sizeof(int16_t), true);
+	s_session_ref = data_logging_create(LOGGING_TAG, DATA_LOGGING_BYTE_ARRAY, sizeof(AccelData), true);
   accel_service_set_sampling_rate(ACCEL_SAMPLING_50HZ);
 	// Subscribe to batched data events
 	accel_data_service_subscribe(NUM_SAMPLES, accel_data_handler);
