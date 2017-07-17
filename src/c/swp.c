@@ -140,7 +140,7 @@ static void prv_init(void) {
 
   if (!app_worker_is_running()) {
     // Data logging
-	  data_logging_finish(data_logging_create(LOGGING_TAG, DATA_LOGGING_INT, sizeof(int16_t), false));
+	  data_logging_finish(data_logging_create(LOGGING_TAG, DATA_LOGGING_BYTE_ARRAY, sizeof(AccelData), false));
   }
 }
 
