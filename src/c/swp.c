@@ -138,10 +138,10 @@ static void prv_init(void) {
   window_stack_push(s_window, animated);
   app_worker_message_subscribe(worker_message_handler);
 
-  if (!app_worker_is_running()) {
+  /*if (!app_worker_is_running()) {
     // Data logging
 	  data_logging_finish(data_logging_create(LOGGING_TAG, DATA_LOGGING_BYTE_ARRAY, sizeof(AccelData), false));
-  }
+  }*/
 }
 
 static void prv_deinit(void) {
