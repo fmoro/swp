@@ -1,6 +1,6 @@
 {
   "name": "swp",
-  "author": "MakeAwesomeHappen",
+  "author": "Federico Moro del Alamo",
   "version": "1.0.0",
   "keywords": ["pebble-app"],
   "private": true,
@@ -23,7 +23,23 @@
       "dummy"
     ],
     "resources": {
-      "media": []
+      "media": [
+        {
+          "name": "START_ICON",
+          "type": "bitmap",
+          "file": "actionbar_icon_play.png"
+        },
+        {
+          "name": "STOP_ICON",
+          "type": "bitmap",
+          "file": "actionbar_icon_stop.png"
+        },
+        {
+          "name": "PAUSE_ICON",
+          "type": "bitmap",
+          "file": "actionbar_icon_pause.png"
+        }
+      ]
     }
   }
 }

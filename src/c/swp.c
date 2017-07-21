@@ -74,41 +74,44 @@ static void set_status_bar(Layer *layer) {
   s_status_bar = status_bar_layer_create();
 
   // Set properties
-  status_bar_layer_set_separator_mode(s_status_bar, StatusBarLayerSeparatorModeDotted);
+  status_bar_layer_set_separator_mode(s_status_bar, StatusBarLayerSeparatorModeNone);
 
   // Add to Window
   layer_add_child(layer, status_bar_layer_get_layer(s_status_bar));
 }
 
-/*static void set_action_bar_layer(Window *window) {
+static void set_action_bar_layer(Window *window) {
   // Load icon bitmaps
-  s_up_bitmap = gbitmap_create_with_resource(RESOURCE_ID_UP_ICON);
-  s_down_bitmap = gbitmap_create_with_resource(RESOURCE_ID_DOWN_ICON);
-  s_check_bitmap = gbitmap_create_with_resource(RESOURCE_ID_CHECK_ICON);
+  s_up_bitmap = gbitmap_create_with_resource(RESOURCE_ID_START_ICON);
+  s_down_bitmap = gbitmap_create_with_resource(RESOURCE_ID_STOP_ICON);
+  s_check_bitmap = gbitmap_create_with_resource(RESOURCE_ID_PAUSE_ICON);
 
   // Create ActionBarLayer
   s_action_bar = action_bar_layer_create();
-  action_bar_layer_set_click_config_provider(s_action_bar, click_config_provider);
+  action_bar_layer_set_click_config_provider(s_action_bar, prv_click_config_provider);
 
   // Set the icons
   action_bar_layer_set_icon(s_action_bar, BUTTON_ID_UP, s_up_bitmap);
-  action_bar_layer_set_icon(s_action_bar, BUTTON_ID_DOWN, s_down_bitmap);
   action_bar_layer_set_icon(s_action_bar, BUTTON_ID_SELECT, s_check_bitmap);
+  action_bar_layer_set_icon(s_action_bar, BUTTON_ID_DOWN, s_down_bitmap);
+
 
   // Add to Window
   action_bar_layer_add_to_window(s_action_bar, window);
-}*/
+}
 
 static void prv_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
 
   set_status_bar(window_layer);
 
-  //set_action_bar_layer(window);
+  set_action_bar_layer(window);
 
   GRect bounds = layer_get_bounds(window_layer);
 
-  s_text_layer = text_layer_create(GRect(0, 72, bounds.size.w, 20));
+  //s_text_layer = text_layer_create(GRect(0, 72, bounds.size.w - ACTION_BAR_WIDTH, 20));
+  const GEdgeInsets label_insets = {.top = bounds.size.h / 2, .right = ACTION_BAR_WIDTH, .left = ACTION_BAR_WIDTH / 2};
+  s_text_layer = text_layer_create(grect_inset(bounds, label_insets));
 
   if (app_worker_is_running()) {
     text_layer_set_text(s_text_layer, "Worker is running");
@@ -125,11 +128,14 @@ static void prv_window_unload(Window *window) {
 
   // Destroy the StatusBarLayer
   status_bar_layer_destroy(s_status_bar);
+
+  // Desctroy de ActinoBarLayer
+  action_bar_layer_destroy(s_action_bar);
 }
 
 static void prv_init(void) {
   s_window = window_create();
-  window_set_click_config_provider(s_window, prv_click_config_provider);
+  //window_set_click_config_provider(s_window, prv_click_config_provider);
   window_set_window_handlers(s_window, (WindowHandlers) {
     .load = prv_window_load,
     .unload = prv_window_unload,
