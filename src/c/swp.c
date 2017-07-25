@@ -22,15 +22,38 @@ static TextLayer *s_text_layer;
 static void worker_message_handler(uint16_t type, AppWorkerMessage *message) {
   if (type == SOURCE_BACKGROUND) {
     if (message->data0 == 0x0000 && message->data1 == 0x0000 && message->data2 == 0x0000) {
-      text_layer_set_text(s_text_layer, "Worker really stoped");
+      text_layer_set_text(s_text_layer, "Worker stoped");
     } else if (message->data0 == 0xFFFF && message->data1 == 0xFFFF && message->data2 == 0xFFFF) {
-      text_layer_set_text(s_text_layer, "Worker really started");
+      text_layer_set_text(s_text_layer, "Worker started");
+    } else if (message->data0 == 0x0000 && message->data1 == 0x0000 && message->data2 == 0x0001) {
+      text_layer_set_text(s_text_layer, "Worker paused");
+    } else if (message->data0 == 0x0000 && message->data1 == 0x0000 && message->data2 == 0x0002) {
+      text_layer_set_text(s_text_layer, "Worker runing");
     }
   }
 }
 
+static void send_pause_message() {
+  AppWorkerMessage message = {
+    .data0 = 0x0000,
+    .data1 = 0x0000,
+    .data2 = 0x0001
+  };
+  app_worker_send_message(SOURCE_FOREGROUND, &message);
+}
+
+static void send_status_message() {
+  AppWorkerMessage message = {
+    .data0 = 0x0000,
+    .data1 = 0x0000,
+    .data2 = 0x003F
+  };
+  app_worker_send_message(SOURCE_FOREGROUND, &message);
+}
+
 static void prv_select_click_handler(ClickRecognizerRef recognizer, void *context) {
   text_layer_set_text(s_text_layer, "Select");
+  send_pause_message();
 }
 
 static void prv_up_click_handler(ClickRecognizerRef recognizer, void *context) {
@@ -114,7 +137,8 @@ static void prv_window_load(Window *window) {
   s_text_layer = text_layer_create(grect_inset(bounds, label_insets));
 
   if (app_worker_is_running()) {
-    text_layer_set_text(s_text_layer, "Worker is running");
+    text_layer_set_text(s_text_layer, "Wait");
+    send_status_message();
   } else {
     text_layer_set_text(s_text_layer, "Press a button");
   }
